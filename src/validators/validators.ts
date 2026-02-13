@@ -28,3 +28,21 @@ export const inviteMemberSchema = z.object({
     email: z.string().min(1, "Email is required").email("Invalid email format").trim(),
     role: z.enum(["admin", "member"]).optional().default("member"),
 });
+
+
+export const paginationSchema = z.object({
+  page: z.coerce
+    .number()
+    .int({ message: "Page must be an integer" })
+    .positive({ message: "Page must be a positive integer" })
+    .default(1),
+
+  limit: z.coerce
+    .number()
+    .int({ message: "Limit must be an integer" })
+    .positive({ message: "Limit must be a positive integer" })
+    .max(100, { message: "Limit cannot exceed 100" }) 
+    .default(20),
+
+  search: z.string().max(100).trim().optional(),
+});
