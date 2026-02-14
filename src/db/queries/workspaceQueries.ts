@@ -37,8 +37,6 @@ export async function createWorkspace(
             [name, description, ownerId]
         );
 
-        // Note: You can technically just use result.insertId, 
-        // but keeping your logic of re-fetching to be safe.
         const [rows] = await connection.execute<WorkspaceRow[]>(
             "SELECT id FROM workspaces WHERE id = ?",
             [result.insertId]
@@ -170,4 +168,24 @@ export async function findMembersByWorkspaceId(workspaceId: string): Promise<Wor
         WHERE wm.workspace_id = ?`, [workspaceId]
     );
     return rows;
+}
+
+export async function countWorkspacesByUserId(userId: string, search?: string): Promise<number> {
+  const pool = getDBPool();
+  let sql = `
+    SELECT COUNT(*) as total
+    FROM workspaces w
+    INNER JOIN workspace_members wm ON w.id = wm.workspace_id
+    WHERE wm.user_id = ?
+  `;
+  
+  const params: any[] = [userId];
+  
+  if (search) {
+    sql += " AND w.name LIKE ?";
+    params.push(`%${search}%`);
+  }
+  
+  const [rows] = await pool.execute<RowDataPacket[]>(sql, params);
+  return rows[0].total;
 }

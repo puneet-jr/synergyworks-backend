@@ -16,9 +16,9 @@ import {
     addMember,
     removeMember,
     findMember,
-    // Note: Imported the new paginated query here
     findWorkspacesByUserIdPaginated, 
-    findMembersByWorkspaceId
+    findMembersByWorkspaceId,
+    countWorkspacesByUserId
 } from "../../db/queries/workspaceQueries.js";
 
 import { findUserByEmail } from "../../db/queries/authQueries.js";
@@ -45,22 +45,19 @@ export const create = asyncHandler(async (req: Request, res: Response, next: Nex
     });
 });
 
+
 export const list = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?.userId;
-
-
     const { page, limit, search } = paginationSchema.parse(req.query);
 
-    // 2. Calculate offset
     const offset = (page - 1) * limit;
 
-    // 3. Call the query
-    const workspaces = await findWorkspacesByUserIdPaginated(
-        userId as string,
-        limit,
-        offset,
-        search
-    );
+    const [workspaces, total] = await Promise.all([
+        findWorkspacesByUserIdPaginated(userId as string, limit, offset, search),
+        countWorkspacesByUserId(userId as string, search)
+    ]);
+
+    const totalPages = limit > 0 ? Math.ceil(total / limit) : 0; // guard against divide-by-zero
 
     res.status(200).json({
         success: true,
@@ -69,9 +66,13 @@ export const list = asyncHandler(async (req: Request, res: Response, next: NextF
             pagination: {
                 page,
                 limit,
-                count: workspaces.length // Current page count
+                total,
+                totalPages,
+                count: workspaces.length,        
+                hasNext: page < totalPages,
+                hasPrev: page > 1
             }
-        },
+        }
     });
 });
 

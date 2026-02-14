@@ -1,32 +1,38 @@
-import {Router} from 'express';
-
+import { Router } from 'express';
 import { authenticate } from '../../shared/middlewares/authMiddleware.js';
-
-import {requireWorkspaceMember,
+import {
+    requireWorkspaceMember,
     requireWorkspaceAdmin,
-    requireWorkspaceOwner} from "../../shared/middlewares/workspaceAuth.js";
+    requireWorkspaceOwner
+} from "../../shared/middlewares/workspaceAuth.js";
+import {
+    create,
+    list,
+    getById,
+    update,
+    remove,
+    inviteMember,
+    kickMember
+} from "./workspaceController.js";
 
-import { create, list, getById, update, remove, inviteMember, kickMember } from "./workspaceController.js";
-
-const router=Router();
+const router = Router();
 
 router.use(authenticate);
 
-router.post("/",create);
-router.get("/",list);
+router.post("/", create); 
+router.get("/", list);    
 
-
-// Routes that require workspace membership
+// View (Any member)
 router.get("/:id", requireWorkspaceMember, getById);
 
-// Routes that require admin/owner role
-router.put("/:id", requireWorkspaceMember, requireWorkspaceAdmin, update);
-router.delete("/:id", requireWorkspaceMember, requireWorkspaceOwner, remove);
+// Update (Admin/Owner)
+router.put("/:id", requireWorkspaceAdmin, update);
 
-// Member management (admin+ only)
-router.post("/:id/members", requireWorkspaceMember, requireWorkspaceAdmin, inviteMember);
-router.delete("/:id/members/:userId", requireWorkspaceMember, requireWorkspaceAdmin, kickMember);
+// Delete (Owner only)
+router.delete("/:id", requireWorkspaceOwner, remove);
+
+// Member management (Admin/Owner)
+router.post("/:id/members", requireWorkspaceAdmin, inviteMember);
+router.delete("/:id/members/:userId", requireWorkspaceAdmin, kickMember);
 
 export default router;
-
-
