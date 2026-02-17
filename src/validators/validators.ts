@@ -46,3 +46,21 @@ export const paginationSchema = z.object({
 
   search: z.string().max(100).trim().optional(),
 });
+
+export const createTaskSchema = z.object({
+    title: z.string().min(1, "Title is required").max(100).trim(),
+    description: z.string().max(500).trim().optional(),
+    status: z.enum(["todo", "in_progress", "done"]).default("todo"),
+})
+
+export const updateTaskSchema= z.object({
+    title: z.string().min(1, "Title is required").max(100).trim().optional(),
+    description: z.string().max(500).trim().optional(),
+    status: z.enum(["todo", "in_progress", "done"]).optional(),
+})
+
+export const assignTaskSchema = z.object({
+    assignedTo: z.string().min(1, "Assigned user ID is required").max(50).trim(),
+    
+})
+
