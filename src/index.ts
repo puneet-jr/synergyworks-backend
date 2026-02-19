@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import authRoutes from './modules/auth/authRouters.js';
 import workspaceRoutes from './modules/workspace/workspaceRoutes.js';
 import { errorHandler } from './shared/middlewares/errorHandler.js';
+import taskRoutes from './modules/task/taskRoutes.js';
 
 const app: Application = express();
 
@@ -16,6 +17,8 @@ app.get('/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/workspaces', workspaceRoutes);
+
+app.use("/api/taskRoutes",taskRoutes);
 
 app.use(errorHandler);
 
