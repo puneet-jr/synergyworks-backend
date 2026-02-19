@@ -10,10 +10,13 @@ export interface ProjectRow extends RowDataPacket {
     updated_at: Date;
 }
 
-// Get a summary of all projects (e.g., for analytics)
-export async function getProjectsSummary(): Promise<{ workspace_id: string }[]> {
+interface WorkspaceIdRow extends RowDataPacket {
+    workspace_id: string;
+}
+
+export async function getProjectsSummary(): Promise<WorkspaceIdRow[]> {
     const pool = getDBPool();
-    const [rows] = await pool.execute<{ workspace_id: string }[]>(
+    const [rows] = await pool.execute<WorkspaceIdRow[]>(
         "SELECT DISTINCT workspace_id FROM projects"
     );
     return rows;

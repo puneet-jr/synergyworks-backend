@@ -47,6 +47,8 @@ export const paginationSchema = z.object({
   search: z.string().max(100).trim().optional(),
 });
 
+// Task validators
+
 export const createTaskSchema = z.object({
     title: z.string().min(1, "Title is required").max(100).trim(),
     description: z.string().max(500).trim().optional(),
@@ -64,3 +66,25 @@ export const assignTaskSchema = z.object({
     
 })
 
+// Project validators
+
+export const createProjectSchema= z.object({
+    title: z.string().min(1, "Title is required").max(100).trim(),
+    description: z.string().max(500).trim().optional(),
+});
+
+export const updateProjectSchema= z.object({
+    title: z.string().min(1, "Title is required").max(100).trim().optional(),
+    description: z.string().max(500).trim().optional(),
+});
+
+
+export const deleteProjectSchema= z.object({
+    projectId: z.string().min(1, "Project ID is required").max(50).trim(),
+});
+
+// Comment validators
+
+export const createCommentSchema= z.object({
+    content: z.string().min(1, "Content is required").max(1000).trim(),
+});
