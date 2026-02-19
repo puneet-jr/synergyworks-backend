@@ -63,7 +63,8 @@ export async function countTasksByWorkspaceId(
     }
 
     const [rows] = await pool.execute<RowDataPacket[]>(sql, params);
-    return rows[0]?.totalCount ?? 0;
+    const total = rows[0]?.totalCount;
+    return typeof total === "number" ? total : Number(total) || 0;
 }
 
 export async function findTasksByWorkspaceIdPaginated(
