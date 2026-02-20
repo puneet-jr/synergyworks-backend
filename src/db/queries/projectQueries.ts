@@ -81,3 +81,13 @@ export async function deleteProject(projectId: string): Promise<void> {
         [projectId]
     );
 }
+
+// Add this function to find a project by ID alone (needed for middleware)
+export async function findProjectById(projectId: string): Promise<ProjectRow | null> {
+    const pool = getDBPool();
+    const [rows] = await pool.execute<ProjectRow[]>(
+        "SELECT id, title, description, workspace_id, created_at, updated_at FROM projects WHERE id = ?",
+        [projectId]
+    );
+    return rows.length > 0 ? rows[0] : null;
+}

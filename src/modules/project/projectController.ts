@@ -1,35 +1,31 @@
-import {Request, Response, NextFunction} from "express";
-
+import { Request, Response, NextFunction } from "express";
 import asyncHandler from "../../shared/middlewares/asyncHandler.js";
-
+import { ValidationError, NotFoundError } from "../../shared/errors/App.Error.js";
 import {
-    ValidationError,
-    NotFoundError,
-    PermissionError,
-    ConflictError
-} from "../../shared/errors/App.Error.js";
-
-import {
-    getProjectsSummary,
     createProject,
     getProjectsByWorkspaceId,
-    getProjectById,updateProject,
+    updateProject,
     deleteProject
 } from "../../db/queries/projectQueries.js";
 
 
+interface ProjectParams{
+    projectId:string;
+}
+export const create = asyncHandler(async (req: Request, res: Response) => {
+    const workspaceId = req.params.id as string; // ← this is the fix. route is /workspaces/:id/projects
+    const { title, description } = req.body;
 
-export const create= asyncHandler(async(req:Request, res:Response, next:NextFunction) => {
+    if (!title?.trim()) {
+        throw new ValidationError("Title is required");
+    }
 
-    const projectId = req.params.projectId;
-    const {title, description} = req.body;
-
-    const newProjectId = await createProject(title, description, projectId as string);
+    const newProjectId = await createProject(title.trim(), description?.trim() || null, workspaceId);
 
     res.status(201).json({
-        success:true,
-        message:"Project created successfully",
-        data:{
+        success: true,
+        message: "Project created successfully",
+        data: {
             newProjectId,
             title: title.trim(),
             description: description?.trim() || null,
@@ -37,18 +33,43 @@ export const create= asyncHandler(async(req:Request, res:Response, next:NextFunc
     });
 });
 
-export const removeProject = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
-    const { projectId } = req.params;
+export const listProjects = asyncHandler(async (req: Request, res: Response) => {
+    const workspaceId = req.workspaceId!; // safe — requireProjectAccess already verified this
 
-    const id = Array.isArray(projectId) ? projectId[0] : projectId;
-    const deleted = await deleteProject(id);
+    const projects = await getProjectsByWorkspaceId(workspaceId);
 
     res.status(200).json({
-        deleted,
+        success: true,
+        data: projects,
+    });
+});
+
+export const removeProject = asyncHandler(async (req: Request, res: Response) => {
+    const  projectId  = req.params.projectId as string; // always a string in Express route params
+
+    await deleteProject(projectId);
+
+    res.status(200).json({
         success: true,
         message: "Project deleted successfully",
     });
 });
- 
 
+export const editProject = asyncHandler(async (req: Request, res: Response) => {
+    const  projectId  = req.params.projectId as string;
+    const { title, description } = req.body;
 
+    if (!title?.trim()) {
+        throw new ValidationError("Title is required");
+    }
+
+    const updated = await updateProject(projectId, title.trim(), description?.trim() || null);
+    if (!updated) {
+        throw new NotFoundError("Project not found or nothing changed");
+    }
+
+    res.status(200).json({
+        success: true,
+        message: "Project updated successfully",
+    });
+});
