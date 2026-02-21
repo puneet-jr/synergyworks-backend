@@ -9,9 +9,7 @@ import {
 } from "../../db/queries/projectQueries.js";
 
 
-interface ProjectParams{
-    projectId:string;
-}
+
 export const create = asyncHandler(async (req: Request, res: Response) => {
     const workspaceId = req.params.id as string; // ← this is the fix. route is /workspaces/:id/projects
     const { title, description } = req.body;
