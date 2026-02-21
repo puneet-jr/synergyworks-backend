@@ -22,21 +22,31 @@ export async function getProjectsSummary(): Promise<WorkspaceIdRow[]> {
     return rows;
 }
 
-// Create a new project
+// Create a new project - FIXED VERSION
 export async function createProject(
     title: string,
     description: string,
     workspaceId: string
 ): Promise<string> {
     const pool = getDBPool();
+    
+    // Generate UUID in code or let MySQL do it - here we let MySQL handle it
     const [result] = await pool.execute<ResultSetHeader>(
-        "INSERT INTO projects (title, description, workspace_id) VALUES (?, ?, ?)",
+        "INSERT INTO projects (id, title, description, workspace_id) VALUES (UUID(), ?, ?, ?)",
         [title, description, workspaceId]
     );
-    if (!result.insertId) {
+    
+    // Since insertId is 0 for UUID, fetch the last inserted row
+    const [rows] = await pool.execute<ProjectRow[]>(
+        "SELECT id FROM projects WHERE workspace_id = ? AND title = ? ORDER BY created_at DESC LIMIT 1",
+        [workspaceId, title]
+    );
+    
+    if (!rows.length) {
         throw new Error("Project creation failed");
     }
-    return result.insertId.toString();
+    
+    return rows[0].id;
 }
 
 // Get all projects for a workspace
@@ -66,7 +76,7 @@ export async function updateProject(
     description: string
 ): Promise<boolean> {
     const pool = getDBPool();
-    const [result]: any = await pool.execute<ResultSetHeader>(
+    const [result] = await pool.execute<ResultSetHeader>(
         "UPDATE projects SET title = ?, description = ? WHERE id = ?",
         [title, description, projectId]
     );
@@ -82,7 +92,7 @@ export async function deleteProject(projectId: string): Promise<void> {
     );
 }
 
-// Add this function to find a project by ID alone (needed for middleware)
+// Find a project by ID alone (needed for middleware)
 export async function findProjectById(projectId: string): Promise<ProjectRow | null> {
     const pool = getDBPool();
     const [rows] = await pool.execute<ProjectRow[]>(
