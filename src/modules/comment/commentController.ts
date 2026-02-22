@@ -27,8 +27,8 @@ export const addComment =asyncHandler(async(req:Request,res:Response)=>{
 
     const projectId = req.params.projectId as string;
      const {comment} =req.body;
-        const authorId = req.project!; // safe — requireAuth already verified this
-        const newCommentId = await createComment(projectId, comment, authorId);
+    const authorId = req.user!.userId;
+     const newCommentId = await createComment(projectId, comment, authorId);
         res.status(201).json({
             success: true,
             message: "Comment added successfully",

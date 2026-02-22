@@ -9,8 +9,11 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "clean": "rm -rf dist",
-    "rebuild": "npm run clean && npm run build"
+    "rebuild": "npm run clean && npm run build",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
   },
+
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
@@ -29,6 +32,7 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
+
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
@@ -40,10 +44,8 @@
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.16.3",
     "redis": "^5.10.0",
+    "uuid": "^13.0.0",
     "zod": "^4.3.6"
-  },
-  "jest": {
-  "preset": "ts-jest",
-  "testEnvironment": "node"
+  }
 }
-}
+

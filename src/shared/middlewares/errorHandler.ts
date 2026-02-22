@@ -41,13 +41,13 @@ export function errorHandler(
 }
 
 
-    if(err && typeof err === 'object' && 'code' in err && err.code === '23505')
-    {
-        return res.status(409).json({
-            success:false,
-            message:'Duplicate entry detected',
-        })
-    }
+    if(err && typeof err === 'object' && 'code' in err && err.code === 'ER_DUP_ENTRY')
+{
+    return res.status(409).json({
+        success:false,
+        message:'Duplicate entry detected',
+    })
+}
 
 
     console.error("Unexpected Error:",err);

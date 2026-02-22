@@ -1,5 +1,6 @@
 import { getDBPool } from "../../config/db.js";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
+import { v4 as uuidv4 } from "uuid";
 
 export interface ProjectRow extends RowDataPacket {
     id: string;
@@ -25,28 +26,23 @@ export async function getProjectsSummary(): Promise<WorkspaceIdRow[]> {
 // Create a new project - FIXED VERSION
 export async function createProject(
     title: string,
-    description: string,
+    description: string | null,
     workspaceId: string
 ): Promise<string> {
+
     const pool = getDBPool();
-    
-    // Generate UUID in code or let MySQL do it - here we let MySQL handle it
+    const projectId = uuidv4();   
+
     const [result] = await pool.execute<ResultSetHeader>(
-        "INSERT INTO projects (id, title, description, workspace_id) VALUES (UUID(), ?, ?, ?)",
-        [title, description, workspaceId]
+        "INSERT INTO projects (id, title, description, workspace_id) VALUES (?, ?, ?, ?)",
+        [projectId, title, description, workspaceId]
     );
-    
-    // Since insertId is 0 for UUID, fetch the last inserted row
-    const [rows] = await pool.execute<ProjectRow[]>(
-        "SELECT id FROM projects WHERE workspace_id = ? AND title = ? ORDER BY created_at DESC LIMIT 1",
-        [workspaceId, title]
-    );
-    
-    if (!rows.length) {
+
+    if (result.affectedRows === 0) {
         throw new Error("Project creation failed");
     }
-    
-    return rows[0].id;
+
+    return projectId; 
 }
 
 // Get all projects for a workspace

@@ -14,17 +14,18 @@ const router=Router();
 
 router.use(authenticate);
 
-router.get("/:id/getTaskSummary",requireWorkspaceAdmin || requireWorkspaceOwner,getTaskSummary);
+router.get("/:id/getTaskSummary", requireWorkspaceAdmin, getTaskSummary);
 
-router.get("/:id/getTaskById",requireWorkspaceMember || requireWorkspaceOwner || requireWorkspaceAdmin,getTaskById);
+router.get("/:id/getTaskById", requireWorkspaceMember, getTaskById);
 
-router.get("/:id/getTasks",requireWorkspaceMember || requireWorkspaceOwner || requireWorkspaceAdmin,getTasks);
-router.post("/:id/assignTask",requireWorkspaceAdmin || requireWorkspaceOwner,assignTask);
+router.get("/:id/getTasks", requireWorkspaceMember, getTasks);
+router.post("/:id/assignTask", requireWorkspaceAdmin, assignTask);
 
-router.put("/:id/updateTask",requireWorkspaceAdmin || requireWorkspaceOwner,updateTask);
+router.put("/:id/updateTask", requireWorkspaceAdmin, updateTask);
 
 router.post("/:id/createTask", requireWorkspaceMember, createTask);
 
+router.delete("/:id/delete/removeTask", requireWorkspaceAdmin, removeTask);
 router.delete("/:id/delete/removeTask",requireWorkspaceAdmin || requireWorkspaceOwner,removeTask);
 
 export default router;

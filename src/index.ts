@@ -28,8 +28,8 @@ app.use('/api/workspaces', workspaceRoutes);
 
 app.use("/api/taskRoutes",taskRoutes);
 
-app.use("/api/projects",projectRoutes);
-app.use("/api/comments",commentRoutes);
+app.use('/api/workspaces/:id/projects', projectRoutes); 
+app.use('/api/projects/:projectId/comments', commentRoutes); 
 
 
 app.use(errorHandler);
