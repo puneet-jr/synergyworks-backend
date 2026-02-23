@@ -11,10 +11,11 @@ export interface WorkspaceRow extends RowDataPacket {
 }
 
 export interface WorkspaceMemberRow extends RowDataPacket {
-    id: string;
     workspace_id: string;
     user_id: string;
+    /** DB column is `roles`; selected as `role` where needed for API consistency */
     role: "owner" | "admin" | "member";
+    roles?: "owner" | "admin" | "member";
     joined_at: Date;
     name?: string;
     email?: string;
@@ -37,9 +38,10 @@ export async function createWorkspace(
             [name, description, ownerId]
         );
 
+        // id is UUID(), so insertId is 0; get id by owner and name
         const [rows] = await connection.execute<WorkspaceRow[]>(
-            "SELECT id FROM workspaces WHERE id = ?",
-            [result.insertId]
+            "SELECT id FROM workspaces WHERE owner_id = ? AND name = ? ORDER BY created_at DESC LIMIT 1",
+            [ownerId, name]
         );
 
         if (rows.length === 0) {
@@ -49,7 +51,7 @@ export async function createWorkspace(
         const workspaceId = rows[0].id;
 
         await connection.execute<ResultSetHeader>(
-            "INSERT INTO workspace_members (workspace_id, user_id, role) VALUES (?, ?, ?)",
+            "INSERT INTO workspace_members (workspace_id, user_id, roles) VALUES (?, ?, ?)",
             [workspaceId, ownerId, "owner"]
         );
 
@@ -95,7 +97,7 @@ export async function findWorkspacesByUserIdPaginated(
     }
 
     sql += " ORDER BY w.created_at DESC LIMIT ? OFFSET ?";
-    params.push(limit, offset);
+    params.push(Number(limit), Number(offset));
 
     const [rows] = await pool.execute<WorkspaceRow[]>(sql, params);
     return rows;
@@ -132,7 +134,7 @@ export async function addMember(
 ): Promise<void> {
     const pool = getDBPool();
     await pool.execute<ResultSetHeader>(
-        "INSERT INTO workspace_members (workspace_id, user_id, role) VALUES (?, ?, ?)",
+        "INSERT INTO workspace_members (workspace_id, user_id, roles) VALUES (?, ?, ?)",
         [workspaceId, userId, role]
     );
 }
@@ -152,7 +154,7 @@ export async function findMember(
     const pool = getDBPool();
 
     const [rows] = await pool.execute<WorkspaceMemberRow[]>(
-        "SELECT * FROM workspace_members WHERE workspace_id = ? AND user_id = ?",
+        "SELECT workspace_id, user_id, roles AS role, joined_at FROM workspace_members WHERE workspace_id = ? AND user_id = ?",
         [workspaceId, userId]
     );
 
@@ -163,7 +165,7 @@ export async function findMembersByWorkspaceId(workspaceId: string): Promise<Wor
     const pool = getDBPool();
 
     const [rows] = await pool.execute<WorkspaceMemberRow[]>(
-        `SELECT wm.*, u.name, u.email FROM workspace_members wm
+        `SELECT wm.workspace_id, wm.user_id, wm.roles AS role, wm.joined_at, u.name, u.email FROM workspace_members wm
         INNER JOIN users u ON wm.user_id = u.id
         WHERE wm.workspace_id = ?`, [workspaceId]
     );

@@ -11,7 +11,7 @@ CREATE TABLE workspaces (
 CREATE table workspace_members(
     workspace_id char(36) not null,
     user_id char(36) not null,
-    role ENUM('owner','admin','member') NOT NULL default 'member', 
+    roles ENUM('owner','admin','member') NOT NULL default 'member',
     joined_at timestamp default CURRENT_TIMESTAMP,
     primary key (workspace_id, user_id),
     foreign key (workspace_id) references workspaces(id) on delete CASCADE,
