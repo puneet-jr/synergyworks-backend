@@ -1,0 +1,81 @@
+[33mcommit d89079b685da328b926362a2b7f19c0f892cb12d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Sun Feb 22 23:03:55 2026 +0530
+
+    chore(test): add jest.config.js for ESM + TypeScript support and update test setup.
+
+[33mcommit d1874d2c9a371a4232cbfc317c548aa57b6049af[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Sun Feb 22 12:22:56 2026 +0530
+
+    Add unit tests for user authentication.
+
+[33mcommit 89a7f2de428a5fc8024b5e776ca0dabbf504f662[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Sat Feb 21 23:59:41 2026 +0530
+
+    feat: add sample API test cases and improve endpoint documentation
+    
+    - Added sample test cases for all major endpoints (auth, workspace, task, project, comment)
+    - Included clear URLs, HTTP methods, and sample request bodies for each API
+    - Improved validator schemas for input validation
+
+[33mcommit 808226dddfd9c6b591e89eee25399282cc3b3cc6[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Sat Feb 21 19:46:52 2026 +0530
+
+    Completed comments module.
+
+[33mcommit 5e686b180343bb05ba8064a6b553e52495cd04bf[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Sat Feb 21 01:21:01 2026 +0530
+
+    Done building Projects module.
+
+[33mcommit 06f45c25d436b0c6ae038b816ea3a3ab1bffd5f2[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Fri Feb 20 01:44:25 2026 +0530
+
+    Added project partial middlwares and controller setup.
+
+[33mcommit 9abbfa21363e88670c53138baf004d3ad851ac4a[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Thu Feb 19 21:12:30 2026 +0530
+
+    Started to build projects module.
+
+[33mcommit b36b0ff1a6be030b828f42e12529c768484a9c62[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Thu Feb 19 09:04:18 2026 +0530
+
+    Implemented tasks Module
+
+[33mcommit 8014f160197c47a95939e9faefee1fba94a71c74[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Thu Feb 19 08:35:01 2026 +0530
+
+    Implemented tasks Module
+
+[33mcommit bf95d5433bde049ae03d7990b3280818f15d38d9[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Tue Feb 17 10:28:29 2026 +0530
+
+    Your message
+
+[33mcommit a0773ee5338137248e25822be4fa66d1d6038f89[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Sat Feb 14 22:43:44 2026 +0530
+
+    Pagitation betterment is done
+
+[33mcommit f62efec4dbe53b3b2551f694753ed81e1a0c04c3[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Sat Feb 14 00:12:14 2026 +0530
+
+    add paginated search to workspace controller
+
+[33mcommit 8f9362fe975f9e26825d271c1a76e99d70e11045[m
+Author: puneet-jr <puneetjanakiram@gmail.com>
+Date:   Fri Feb 13 22:27:21 2026 +0530
+
+    Add .gitignore and initial project files

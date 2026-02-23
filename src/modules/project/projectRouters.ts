@@ -3,20 +3,21 @@ import { authenticate } from "../../shared/middlewares/authMiddleware.js";
 import {
     requireProjectAccess,
     requireProjectAdmin,
-    requireProjectOwner
+    requireProjectOwner,
+    requireWorkspaceAccessForList,
 } from "../../shared/middlewares/projectMiddleware.js";
 import { create, listProjects, removeProject, editProject } from "./projectController.js";
 
-const router = Router({ mergeParams: true }); 
+const router = Router({ mergeParams: true });
 
+// List projects for a workspace: /api/workspaces/:id/projects
+router.get("/", authenticate, requireWorkspaceAccessForList, listProjects);
 
-router.get("/",    authenticate, requireProjectAccess, listProjects);
-
-
-router.post("/",   authenticate, create);
+// Create project in a workspace: /api/workspaces/:id/projects
+router.post("/", authenticate, create);
 
 // Editing requires membership
-router.put("/:projectId",    authenticate, requireProjectAccess, requireProjectAdmin, editProject);
+router.put("/:projectId", authenticate, requireProjectAccess, requireProjectAdmin, editProject);
 
 // Deletion requires ownership
 router.delete("/:projectId", authenticate, requireProjectAccess, requireProjectOwner, removeProject);

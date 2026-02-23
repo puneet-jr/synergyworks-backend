@@ -41,7 +41,8 @@ export const requireProjectAccess = async (req: Request, res: Response, next: Ne
         }
 
         // B. Check if user is a member of that workspace
-        const membership = await findMember(userId, project.workspace_id);
+        // findMember expects (workspaceId, userId)
+        const membership = await findMember(project.workspace_id, userId);
 
         if (!membership) {
             return next(new PermissionError("You do not have access to this project"));
@@ -97,3 +98,19 @@ export const requireProjectAdmin = async (req: Request, res: Response, next: Nex
         next(error);
     }
 };
+
+// Add after requireProjectAccess. For GET / when mounted at /workspaces/:id/projects.
+export const requireWorkspaceAccessForList = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.userId;
+      const workspaceId = req.params.id as string;
+      if (!userId) return next(new AuthError("User not authenticated"));
+      if (!workspaceId) return next(new ValidationError("Workspace ID is required"));
+      const membership = await findMember(workspaceId, userId);
+      if (!membership) return next(new PermissionError("You do not have access to this workspace"));
+      req.workspaceId = workspaceId;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
