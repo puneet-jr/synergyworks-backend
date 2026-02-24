@@ -11,6 +11,7 @@ beforeAll(async () => {
   const email = `commentuser+${Date.now()}@example.com`;
 
   const reg = await request(app).post('/api/auth/register').send({
+    id:commentId,
     name: 'Comment User',
     email,
     password: 'Test1234',

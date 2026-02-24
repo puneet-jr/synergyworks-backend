@@ -10,6 +10,7 @@ beforeAll(async () => {
   const email = `projectuser+${Date.now()}@example.com`;
 
   const reg = await request(app).post('/api/auth/register').send({
+    id:projectId,
     name: 'Project User',
     email,
     password: 'Test1234',
