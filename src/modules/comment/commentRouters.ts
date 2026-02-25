@@ -11,7 +11,7 @@ import {
     countComments
 } from "./commentController.js";
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
 router.use(authenticate);
 router.use(requireProjectAccess);

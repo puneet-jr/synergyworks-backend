@@ -81,27 +81,29 @@ export async function findWorkspacesByUserIdPaginated(
     limit: number,
     offset: number,
     search?: string
-): Promise<WorkspaceRow[]> {
+  ): Promise<WorkspaceRow[]> {
     const pool = getDBPool();
-    
+
     let sql = `
-        SELECT w.* FROM workspaces w
-        INNER JOIN workspace_members wm ON w.id = wm.workspace_id
-        WHERE wm.user_id = ?
+      SELECT w.* FROM workspaces w
+      INNER JOIN workspace_members wm ON w.id = wm.workspace_id
+      WHERE wm.user_id = ?
     `;
     const params: any[] = [userId];
 
     if (search) {
-        sql += " AND w.name LIKE ?";
-        params.push(`%${search}%`);
+      sql += " AND w.name LIKE ?";
+      params.push(`%${search}%`);
     }
 
-    sql += " ORDER BY w.created_at DESC LIMIT ? OFFSET ?";
-    params.push(Number(limit), Number(offset));
+    const safeLimit = Number(limit);
+    const safeOffset = Number(offset);
+
+    sql += ` ORDER BY w.created_at DESC LIMIT ${safeLimit} OFFSET ${safeOffset}`;
 
     const [rows] = await pool.execute<WorkspaceRow[]>(sql, params);
     return rows;
-}
+  }
 
 export async function updateWorkspace(
     id: string,
