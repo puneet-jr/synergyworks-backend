@@ -2,7 +2,6 @@ import request from 'supertest';
 import app from '../index.js';
 import { logIfNotSuccess } from './testHelpers.js';
 
-// Use a unique email per test run so re-running tests doesn't fail on duplicate email
 const email = `testuser+${Date.now()}@example.com`;
 
 describe('Auth API', () => {

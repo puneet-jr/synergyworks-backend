@@ -13,7 +13,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const app: Application = express();
+export const app: Application = express();
 
 app.use(helmet());
 
@@ -35,4 +35,5 @@ app.use('/api/projects/:projectId/comments', commentRoutes);
 app.use(errorHandler);
 
 export default app;
+
 

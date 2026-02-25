@@ -3,8 +3,6 @@ import { randomUUID } from "crypto";
 
 import asyncHandler from "../../shared/middlewares/asyncHandler.js";
 
-
-
 import {
     ValidationError,
     NotFoundError
@@ -17,15 +15,16 @@ import {
     findTaskSummaryByWorkspaceId,
     findTasksById,
     findTasksByWorkspaceIdPaginated,
-    countTasksByWorkspaceId
+    countTasksByWorkspaceId,
+    type TaskRow
 } from "../../db/queries/taskQueries.js";
 
 import {
     createTaskSchema,
     updateTaskSchema,
-    assignTaskSchema
+    assignTaskSchema,
+    paginationSchema
 } from "../../validators/validators.js";
-import { paginationSchema } from "../../validators/validators.js";
 
 export const getTaskSummary = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const workspaceId = req.workspaceMember!.workspaceId;
@@ -65,7 +64,7 @@ export const getTasks = asyncHandler(async (req: Request, res: Response, next: N
     res.status(200).json({
         success: true,
         data: {
-            tasks: tasks.map((t) => ({
+            tasks: tasks.map((t: TaskRow) => ({
                 id: t.id,
                 title: t.title,
                 description: t.description,
@@ -230,3 +229,4 @@ export const removeTask = asyncHandler(async (req: Request, res: Response, next:
         message: "Task deleted successfully",
     });
 });
+

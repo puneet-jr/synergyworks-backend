@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { findMember } from "../../db/queries/workspaceQueries.js";
-import { findProjectById } from "../../db/queries/projectQueries.js"; // Import the new query
+import { findProjectById } from "../../db/queries/projectQueries.js"; 
 import { PermissionError, AuthError, NotFoundError,ValidationError } from "../errors/App.Error.js";
 
 // Extend Request types for TypeScript
 declare global {
     namespace Express {
         interface Request {
-            project?: any; // The full project object
-            workspaceId?: string; // The ID of the workspace the project belongs to
-            memberRole?: string; // The user's role in this workspace ('owner', 'admin', 'member')
+            project?: any; 
+            workspaceId?: string; 
+            memberRole?: string; 
         }
     }
 }
