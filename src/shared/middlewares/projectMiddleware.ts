@@ -14,10 +14,6 @@ declare global {
     }
 }
 
-interface ProjectParams{
-    projectId:string;
-}
-
 // 1. HEAVY LIFTER: Fetch Project + Check Membership
 export const requireProjectAccess = async (req: Request, res: Response, next: NextFunction) => {
     try {

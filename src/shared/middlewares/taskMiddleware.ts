@@ -15,7 +15,7 @@ declare global {
 }
 
 /**
- * THINKING: 
+
  * workspaceMember is already verified at this point (requireWorkspaceMember ran first).
  * So we know: user exists, user is in the workspace.
  * 
@@ -64,7 +64,7 @@ export async function requireTaskAccess(
 }
 
 /**
- * THINKING:
+
  * Who can modify/delete a task?
  * - Admins and owners: yes, always (they manage the workspace)
  * - Regular members: only if the task is assigned to them
