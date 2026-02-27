@@ -60,3 +60,4 @@ describe('Workspace API', () => {
     expect(res.body.data.workspace.id).toBe(workspaceId);
   });
 });
+

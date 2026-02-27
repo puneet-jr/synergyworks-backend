@@ -33,3 +33,4 @@ describe('Auth API', () => {
     expect(res.body.data.accessToken).toBeDefined();
   });
 });
+

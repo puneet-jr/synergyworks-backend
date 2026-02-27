@@ -72,3 +72,4 @@ describe('Comment API', () => {
     expect(Array.isArray(res.body.data)).toBe(true);
   });
 });
+
