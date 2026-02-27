@@ -1,4 +1,4 @@
-# Synergyworks Backend
+#  Workspace-Hub-API
 
 A robust, scalable Node.js/TypeScript backend API for workspace and project management with task tracking, team collaboration, and real-time commenting features.
 
