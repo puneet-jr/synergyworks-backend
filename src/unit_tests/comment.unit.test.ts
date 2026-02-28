@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import type { CommentRow } from "../db/queries/commentQueries.js";
 
-// ─── Mock the query module BEFORE importing the controller ───────────────────
 jest.mock("../db/queries/commentQueries.js", () => ({
     getCommentsByProjectId: jest.fn(),
     getCommentById: jest.fn(),
@@ -12,7 +11,7 @@ jest.mock("../db/queries/commentQueries.js", () => ({
     deleteComment: jest.fn(),
 }));
 
-// ─── Now import controller + mocked queries ──────────────────────────────────
+
 import {
     listComments,
     addComment,
